@@ -49,7 +49,7 @@ async def predict(body: PredictionRequest):
         answer = -1 
         if match:
             answer = answer_dict.get("answer")
-        reasoning = answer_dict["reasoning"] + "�^~�^bве�^b �^aгене�^`и�^`ован модел�^l�^n gpt-4o-mini"
+        reasoning = answer_dict["reasoning"] + "Ответ сгенерирован моделью gpt-4o-mini"
         sources = answer_dict["sources"]
         response = PredictionResponse(
                    id=body.id,
