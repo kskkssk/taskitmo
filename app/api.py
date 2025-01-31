@@ -6,6 +6,7 @@ from pydantic import HttpUrl
 from schemas.request import PredictionRequest, PredictionResponse
 from service.search import search_gpt
 import time
+import re 
 
 app = FastAPI()
 
@@ -30,7 +31,7 @@ async def log_requests(request: Request, call_next):
     response_body = b""
     async for chunk in response.body_iterator:
         response_body += chunk
-        
+
     return Response(
         content=response_body,
         status_code=response.status_code,
@@ -43,15 +44,19 @@ async def log_requests(request: Request, call_next):
 async def predict(body: PredictionRequest):
     try:
         answer_dict = search_gpt(body.query)
-        reasoning = answer_dict["reasoning"]
+        pattern = r"\d+\.\s.+"
+        match = re.findall(pattern, body.query)
+        answer = -1 
+        if match:
+            answer = answer_dict.get("answer")
+        reasoning = answer_dict["reasoning"] + "�^~�^bве�^b �^aгене�^`и�^`ован модел�^l�^n gpt-4o-mini"
         sources = answer_dict["sources"]
-        answer = answer_dict["answer"] if int(answer) else 'null'
         response = PredictionResponse(
-            id=body.id,
-            answer=answer,
-            reasoning=reasoning,
-            sources=sources,
-        )
+                   id=body.id,
+                   answer=answer,
+                   reasoning=reasoning,
+                   sources=sources,
+               )
         return response
     except ValueError as e:
         error_msg = str(e)
@@ -62,3 +67,4 @@ async def predict(body: PredictionRequest):
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8080)
+
