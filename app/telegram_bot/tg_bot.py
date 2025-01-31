@@ -47,14 +47,9 @@ async def start(message: types.Message):
 async def help(message: types.Message):
     await message.answer(
         f"Привет, {message.from_user.first_name}! Я помогу тебе узнать любую информацию про университет"
-        f"ИТМО\n Ты можешь узнать последние новости, получить ответ на свой вопрос от языковой модели"
+        f"ИТМО\n Ты можешь получить ответ на свой вопрос от языковой модели"
         f"с указанием внешних источников")
-
-'''
-@dp.message_handler(lambda message: message.text.lower() == 'последние новости', state="*")
-async def get_news(message: types.Message, state: FSMContext):
-    await state.finish()
-'''
+    
 
 @dp.message_handler(lambda message: message.text.lower() == 'задать вопрос', state="*")
 async def query(message: types.Message, state: FSMContext):
